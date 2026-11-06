@@ -1,0 +1,18 @@
+# Установленные зависимости
+node_modules/
+
+# Результат сборки
+dist/
+
+# Локальные настройки
+.env.local
+.env.*.local
+
+# Файлы TypeScript
+*.tsbuildinfo
+
+# Настройки WebStorm
+.idea/
+
+# Логи
+*.log
