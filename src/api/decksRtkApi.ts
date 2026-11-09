@@ -4,10 +4,11 @@ import {
 
 } from "@reduxjs/toolkit/query/react";
 
-import type {GetDecksResponse, BaseResponse, Deck} from "./decksApi.ts";
+import type {GetDecksResponse, BaseResponse, Deck} from "./decks.types.ts";
 
 export const decksRtkApi = createApi({
     reducerPath: 'decksRtkApi',
+    tagTypes: ['Deck'],
     baseQuery: fetchBaseQuery({
         baseUrl: import.meta.env.VITE_API_BASE_URL || '/api/'
     }),
@@ -17,7 +18,8 @@ export const decksRtkApi = createApi({
                 {
                     url: 'decks',
                     params: params
-                })
+                }),
+            providesTags: ["Deck"]
 
         }),
         createDeck: builder.mutation<BaseResponse<{item: Deck}>, string>({
@@ -25,7 +27,8 @@ export const decksRtkApi = createApi({
                 url: 'decks',
                 method: "POST",
                 body: {name}
-            })
+            }),
+            invalidatesTags: ['Deck']
         })
     })
 })

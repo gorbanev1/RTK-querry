@@ -1,5 +1,5 @@
 import { createAppSlice } from "../../common/createAppSlice"
-import { decksApi, type Deck } from "../../api/decksApi"
+import { decksApi, type Deck } from "../../api/decks.types"
 
 type Status = "idle" | "loading" | "succeeded" | "failed"
 

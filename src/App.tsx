@@ -1,16 +1,14 @@
-import {useState, type FormEvent} from "react"
-import {useAppDispatch, useAppSelector} from "./app/store"
-import {createDeckTC,} from "./features/decks/decksSlice"
-import {useGetDecksQuery} from "./api/decksRtkApi.ts";
+import {type FormEvent, useState} from "react"
+import {useCreateDeckMutation, useGetDecksQuery} from "./api/decksRtkApi.ts";
 
 const PAGE_SIZE = 3
 
 export function App() {
-    const dispatch = useAppDispatch()
-    const {isCreating, createError,} = useAppSelector((state) => state.decks)
+    //const dispatch = useAppDispatch()
+
     const [page, setPage] = useState(1)
     const [name, setName] = useState("")
-    const {data, isLoading, isFetching, isError, refetch} = useGetDecksQuery(
+    const {data, isLoading, isFetching, isError,} = useGetDecksQuery(
         {
             page,
             pageSize: PAGE_SIZE,
@@ -19,6 +17,7 @@ export function App() {
             refetchOnMountOrArgChange: true
         }
     )
+    const [createDeck, {isLoading: isCreating, isError: isCreateError}] = useCreateDeckMutation()
     console.log(data, isLoading, isError)
     const items = data?.items ?? []
     const totalCount = data?.totalCount ?? 0
@@ -30,13 +29,9 @@ export function App() {
         if (!name.trim()) return
 
         try {
-            await dispatch(createDeckTC(name.trim())).unwrap()
+            await createDeck(name.trim()).unwrap()
             setName("")
-            if (page === 1) {
-                void refetch()
-            } else {
-                setPage(1) // useEffect подгрузит первую страницу
-            }
+            setPage(1) // useEffect подгрузит первую страницу
         } catch {
             // Сообщение об ошибке появится из state.decks.createError
         }
@@ -62,7 +57,7 @@ export function App() {
                         {isCreating ? "Создаём…" : "Создать"}
                     </button>
                 </div>
-                {createError && <p role="alert" className="error">{createError}</p>}
+                {isCreateError && <p role="alert" className="error">{isCreateError}</p>}
             </form>
 
             <section className="section">
